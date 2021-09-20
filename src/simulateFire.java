@@ -1,11 +1,10 @@
 public class simulateFire {
     private static final int forestSize = 10;
     private static int[][] forest = new int[forestSize][forestSize];
-    private static double fireSpreadDiagonalChance = 0.8;
-    private static final double fireSpreadHorizontalChance = 0.6;
+    private static final double fireSpreadHorizontalChance = 0.8;
+    private static final double fireSpreadDiagonalChance = 0.6;
     public static void main(String[] args) {
         forest = makeTreeDensity(forestSize, 0.5);
-        printForest(forest);
         /*
         if value is:
         0 - no tree
@@ -13,6 +12,7 @@ public class simulateFire {
         2 - burning tree
         3 - ash
         */
+        spreadFire();
     }
     private static void spreadFire(){
         int hours = 100;
@@ -26,20 +26,23 @@ public class simulateFire {
             }
         }
         for (int hour = 0; hour < hours; hour++) {
+            printForest(forest);
+            System.out.println("--------------------------");
             for (int i = 0; i < forestSize; i++) {
                 for (int j = 0; j < forestSize; j++) {
                     if(forest[i][j] == 2){
                         for (int k = i-1; k <= i+1; k++) {
                             for (int l = j-1; l <= j+1; l++) {
                                 if(isInBound(forest, k, l) && forest[k][l] == 1){ //is in bounds and is tree
-                                    if(Math.abs(i - k) + Math.abs(j - l) == 2 && isInBound(forest, k, l) && forest[k][l] == 1){ //diagonal tree
+                                    int indexDiff = Math.abs(i - k) + Math.abs(j - l);
+                                    if(indexDiff == 1){ //horizontal tree
+                                        double fireChance = Math.random();
+                                        if(fireChance < fireSpreadHorizontalChance) forest[k][l] = 2;
+                                    }
+                                    if(indexDiff == 2){ //diagonal tree
                                         double fireChance = Math.random();
                                         if(fireChance < fireSpreadDiagonalChance) forest[k][l] = 2;
                                     }
-                                }
-                                if(Math.abs(i - k) + Math.abs(j - l) == 2 && isInBound(forest, k, l) && forest[k][l] == 1){ //diagonal tree
-                                    double fireChance = Math.random();
-                                    if(fireChance < fireSpreadDiagonalChance) forest[k][l] = 2;
                                 }
                             }
                         }
