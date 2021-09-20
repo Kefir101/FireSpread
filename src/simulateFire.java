@@ -1,8 +1,8 @@
-public class Main {
+public class simulateFire {
     private static final int forestSize = 10;
     private static int[][] forest = new int[forestSize][forestSize];
-    double fireSpreadHorizontalChance = 0.8;
-    double fireSpreadDiagonalChance = 0.6;
+    private static double fireSpreadDiagonalChance = 0.8;
+    private static final double fireSpreadHorizontalChance = 0.6;
     public static void main(String[] args) {
         forest = makeTreeDensity(forestSize, 0.5);
         printForest(forest);
@@ -14,18 +14,36 @@ public class Main {
         3 - ash
         */
     }
-    private static void runFireSpread(){
+    private static void spreadFire(){
         int hours = 100;
         boolean setFireToTree = false;
         while(!setFireToTree){
             int row = (int)(Math.random()*forestSize);
             int col = (int)(Math.random()*forestSize);
-            if(isInBound(forest, row, col) && )
+            if(isInBound(forest, row, col) && forest[row][col] == 1){
+                forest[row][col] = 2;
+                setFireToTree = true;
+            }
         }
         for (int hour = 0; hour < hours; hour++) {
             for (int i = 0; i < forestSize; i++) {
                 for (int j = 0; j < forestSize; j++) {
-                    if(forest[i][j] > 1)
+                    if(forest[i][j] == 2){
+                        for (int k = i-1; k <= i+1; k++) {
+                            for (int l = j-1; l <= j+1; l++) {
+                                if(isInBound(forest, k, l) && forest[k][l] == 1){ //is in bounds and is tree
+                                    if(Math.abs(i - k) + Math.abs(j - l) == 2 && isInBound(forest, k, l) && forest[k][l] == 1){ //diagonal tree
+                                        double fireChance = Math.random();
+                                        if(fireChance < fireSpreadDiagonalChance) forest[k][l] = 2;
+                                    }
+                                }
+                                if(Math.abs(i - k) + Math.abs(j - l) == 2 && isInBound(forest, k, l) && forest[k][l] == 1){ //diagonal tree
+                                    double fireChance = Math.random();
+                                    if(fireChance < fireSpreadDiagonalChance) forest[k][l] = 2;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -53,3 +71,4 @@ public class Main {
         return row >= 0 && col >= 0 && row < forest.length && col < forest[0].length;
     }
 }
+
