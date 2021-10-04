@@ -86,23 +86,23 @@ public class Simulator {
                         } else {
                             tempHorzChance /= (1 + Math.abs(wind));
                         }
-                        double fireChance = Math.random();
-                        if(fireChance < tempHorzChance){
-                            forest[k][l] = BURNING_TREE;
-                            treesBurned++;
-                        }
+                        if(burnSingleNearbyTree(tempHorzChance, k, l)) treesBurned++;
                     }
                     if(indexDiff == 2){ //diagonal tree
-                        double fireChance = Math.random();
-                        if(fireChance < tempDiagChance) {
-                            forest[k][l] = BURNING_TREE;
-                            treesBurned++;
-                        }
+                        if(burnSingleNearbyTree(tempDiagChance, k, l)) treesBurned++;
                     }
                 }
             }
         }
         return treesBurned;
+    }
+    private boolean burnSingleNearbyTree(double burnChance, int row, int col){
+        double fireChance = Math.random();
+        if(fireChance < burnChance) {
+            forest[row][col] = BURNING_TREE;
+            return true;
+        }
+        return false;
     }
     private boolean isInBound(int row, int col){
         return row >= 0 && col >= 0 && row < getHeight() && col < getWidth();
