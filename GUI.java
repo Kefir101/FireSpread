@@ -33,7 +33,7 @@ public class GUI extends PApplet {
     }
 
     @Override
-    public void draw() {
+    public void draw()  {
         background(200);
 
         // TODO: have your simulation run one step.
